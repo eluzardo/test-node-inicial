@@ -1,21 +1,22 @@
 const { Router } = require("express");
 const router = Router();
 const {
-  createTable,
   insertData,
   updateData,
   deleteData,
-  selectDatabyNameOrLastName,
-  selectByBetweenDate,
-  selectByDate,
+  search,
 } = require("../controllers/index.controller");
 
+//Create user URL
 router.post("/api/create-user", insertData);
 
+//Update user URL
 router.put("/api/update-user/:id", updateData);
 
+//Delete user URL
 router.delete('/api/delete-user/:id', deleteData);
 
-router.get('/api/get-user-by-date', selectByDate)
+//Search user URL
+router.get('/api/search', search)
 
 module.exports = router;
