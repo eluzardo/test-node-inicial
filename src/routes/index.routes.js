@@ -14,9 +14,9 @@ router.post("/api/create-user", insertData);
 router.put("/api/update-user/:id", updateData);
 
 //Delete user URL
-router.delete('/api/delete-user/:id', deleteData);
+router.delete("/api/delete-user/:id", deleteData);
 
 //Search user URL
-router.get('/api/search', search)
+router.get("/api/search", search);
 
 module.exports = router;

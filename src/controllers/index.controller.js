@@ -6,14 +6,13 @@ const {
   search,
 } = require("../models/User");
 const db = require("../db");
-//const { query } = require("express");
 const userController = {};
 
 //all the CRUD queries statements are requested from the user model to be sent to the DB
 
 //Insertdata: client fills all the fields in the request, then this values are stored in an array and pass to the DB as a paremeter with the query string from the User model
 
-userController.insertData = (req, res) => {
+userController.insertData = async (req, res) => {
   const newUser = [
     req.body.name,
     req.body.lastName,
@@ -22,7 +21,7 @@ userController.insertData = (req, res) => {
   ];
   const query = insertData();
   //DB query
-  db.run(query, newUser, (err) => {
+  await db.run(query, newUser, (err) => {
     if (err) {
       console.log("Can't add user" + err);
       res.status(500).send({ message: "Can't insert. Error: " + err });
@@ -33,7 +32,7 @@ userController.insertData = (req, res) => {
 
 //Updatedata: client fills all the fields to be updated in the request, then this values are stored in an array and passed to the DB as a paremeter with the query string from the User model
 
-userController.updateData = (req, res) => {
+userController.updateData = async (req, res) => {
   const update = [
     req.body.name,
     req.body.lastName,
@@ -54,11 +53,11 @@ userController.updateData = (req, res) => {
 
 //Deletedata: client select an user by id and this parameter is passed by the url, then this value is passed as a paremeter to the DB with the query string imported from the User model
 
-userController.deleteData = (req, res) => {
+userController.deleteData = async (req, res) => {
   const { id } = req.params;
   const query = deleteData();
   //DB query
-  db.run(query, id, (err) => {
+  await db.run(query, id, (err) => {
     if (err) {
       console.log("Can't delete" + err);
       res.status(500).send({ message: "Can't delete. Error: " + err });
@@ -73,16 +72,16 @@ userController.deleteData = (req, res) => {
 //Both searchs can be mixed.
 //All these values are passed as arguments to the search function in User model wich returns a query string that is passed to the DB
 
-userController.search = (req, res) => {
+userController.search = async (req, res) => {
   const { option, string } = req.body;
   let { date1, date2 } = req.body;
-  let isAfter = false,
-    isBefore = false,
-    isBetween = false;
+  let url = "/api/search";
+  (isAfter = false), (isBefore = false), (isBetween = false);
   auxDate = "";
 
   if (option === 1) {
     isAfter = true;
+    //url+=''
   }
   if (option === 2) {
     isBefore = true;
@@ -100,7 +99,7 @@ userController.search = (req, res) => {
   //The request to the DB has only 1 argument due that the search function returns the complete query string.
   const query = search(isBefore, isAfter, isBetween, date1, date2, string);
   //DB query
-  db.all(query, (err, result) => {
+  await db.all(query, (err, result) => {
     if (err) {
       console.log("error:" + err);
       res.status(500).send({ message: "Can't search. Error: " + err });
